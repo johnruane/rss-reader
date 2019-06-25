@@ -1,25 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './App.css';
+import './index.css'
 
 // const sourceWebsites = ['https://crossorigin.me/https://www.refinery29.com/rss.xml'];
 
 class ArticleList extends React.Component {
   render() {
     const articles = this.props.articles;
+
     return (
-      articles.forEach((element, index) => {
+      articles.map((element, index) => {
         return (
-          <article className="article" key="{key}">
-            <img className="article-image" src="https://placeimg.com/240/146/any" alt=""/>
-            <p className="article-heading">{element.childNodes[0]}</p>
+          <article className="article" key={index}>
+            <a className="article-inner article-link" href={element.link} target="_blank"><img className="article-image" src={element.description} alt=""/>
+              <h3 className="article-heading">{element.title}</h3></a>
           </article>
         )
       })
     );
   }
 }
-
 
 export default class RssReader extends React.Component {
   constructor(props) {
@@ -29,22 +29,20 @@ export default class RssReader extends React.Component {
     }
   }
    
-  renderArticle(text) {
-    return (
-      <article className="article" key="{key}">
-        <img className="article-image" src="https://placeimg.com/240/146/any" alt=""/>
-        <p className="article-heading">{text}</p>
-      </article>
-    );
-  }
-   
+  
   async componentDidMount() {
     const response = await fetch('https://cors-anywhere.herokuapp.com/https://www.refinery29.com/rss.xml');
     const results = await response.text();
     const domparser = new DOMParser();
     const doc = domparser.parseFromString(results, 'text/xml');
-    const articles = [...doc.querySelectorAll('channel item')];
-    console.log(articles);
+    const articles = Array.from(doc.querySelectorAll('channel item')).map(item => {
+      const imageParser = domparser.parseFromString(item.querySelector('description').textContent, 'text/xml');
+      return ({
+        title: item.querySelector('title').textContent,
+        description: imageParser.querySelector('figure img').getAttribute('src'),
+        link: item.querySelector('link').textContent,
+      })
+    });
     this.setState({
       articles: articles,
     });
@@ -52,7 +50,7 @@ export default class RssReader extends React.Component {
    
   render() {
     return (
-      <div>
+      <div className="article-container">
         <ArticleList articles={this.state.articles}/>
       </div>
     )
