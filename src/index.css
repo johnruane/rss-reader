@@ -1,5 +1,7 @@
 :root {
+  --vertical-margin-small: 11px;
   --vertical-margin: 22px;
+  --vertical-margin-large: 33px;
 }
 
 html, body, div, span, applet, object, iframe,
@@ -66,4 +68,8 @@ body {
 }
 .article-link {
   text-decoration: none;
+  display: block;
+}
+.article-origin {
+  font-style: italic;
 }
