@@ -1,42 +1,20 @@
 import React from 'react';
 
-class SortBy extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        id: props.id,
-        title: props.title,
-        sortOptions: props.sortOptions,
-        selectedOption: `sc-${props.id}-0`,
-      }
-  
-      this.handleChange = this.handleChange.bind(this); 
-    }
-  
-    handleChange(changeEvent) {
-      this.setState({
-        selectedOption: changeEvent.target.value
-      });
-    }
-  
-    render() {
-      return (
-        <div className="filter-by-number">
-          <p className="filter-heading">{this.state.title}: </p>
-          <div className="segmented-control">      
-            { this.state.sortOptions.map((element, index) => {
-              return (
-                <React.Fragment>
-                  <input className="segmented-control-input" type="radio" name={"sc-"+ this.state.id} id={"sc-"+ this.state.id +"-"+ index} 
-                    checked={this.state.selectedOption === "sc-"+ this.state.id +"-"+ index} onChange={this.handleChange} value={"sc-"+ this.state.id +"-"+ index} />
-                  <label className="segmented-control-label" htmlFor={"sc-"+ this.state.id +"-"+ index}>{element}</label>
-                </React.Fragment>
-              )
-            })}
-          </div>
+export default class SortBy extends React.Component {
+  render() {
+    const { onSortClick, sortByChecked } = this.props;
+    return (
+      <div className="filter-by">
+        <p className="filter-heading">{this.props.title}: </p>
+        <div className="segmented-control">
+          <input className="segmented-control-input" type="radio" name="sc-1" id="sc-1-2" 
+            defaultChecked={sortByChecked === "descending"} onChange={e => onSortClick(e)} value="descending" />
+          <label className="segmented-control-label" htmlFor="sc-1-2">↓</label>
+          <input className="segmented-control-input" type="radio" name="sc-1" id="sc-1-1" 
+            defaultChecked={sortByChecked === "ascending"} onChange={e => onSortClick(e)} value="ascending" />
+          <label className="segmented-control-label" htmlFor="sc-1-1">↑</label>
         </div>
-      )
-    }
+      </div>
+    )
   }
-
-  export default SortBy;
+}

@@ -78,7 +78,7 @@ body {
   justify-content: center;
   margin: 20px;
 }
-.filter-by-number:not(:last-child) {
+.filter-by:not(:last-child) {
   margin-right: 20px;
 }
 .segmented-control {

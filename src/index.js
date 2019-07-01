@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import SortBy from './components/SortBy.js';
+import FilterBy from './components/FilterBy.js';
 
 const sourceWebsites = [
   {title: 'refinery29', url: 'https://www.refinery29.com/rss.xml'},
@@ -35,7 +36,23 @@ export default class RssReader extends React.Component {
     super(props);
     this.state = {
       articles: [],
+      sortOrder: 'descending',
+      filterBy: 'all'
     }
+
+    this.handleSortArticles = this.handleSortArticles.bind(this);
+  }
+
+  handleFilterArticles(e) {
+
+  }
+
+  handleSortArticles(e) {
+    const articles = this.state.articles;
+
+    this.setState({
+      articles: sortArticles(e.target.value, articles),
+    });
   }
 
   async componentDidMount() {
@@ -47,7 +64,7 @@ export default class RssReader extends React.Component {
       allArticles.push(promise);
     });
 
-    // prevent further execution until all promises are fulfilled
+        // prevent further execution until all promises are fulfilled
     const allArticlesDetails = await Promise.all(allArticles);
     const flatArticles = [].concat(...allArticlesDetails);
 
@@ -77,12 +94,12 @@ export default class RssReader extends React.Component {
           heading: item.querySelector('title').textContent,
           src: imageUrl,
           link: item.querySelector('link').textContent,
-          date:getPubDate(item.querySelector('pubDate').textContent),
+          date: getPubDate(item.querySelector('pubDate').textContent),
       })
     })
 
     this.setState({
-      articles: articles,
+      articles: sortArticles('descending', articles),
     });
   }
 
@@ -90,8 +107,8 @@ export default class RssReader extends React.Component {
     return (
       <div className="article-container">
         <div className="header">
-          <SortBy id="sb1" title="Articles" sortOptions={['All', '5', '10']}/>
-          <SortBy id="sb2" title="Sort" sortOptions={['↑', '↓']}/>
+          <FilterBy title="Articles" filterByChecked={this.state.filterBy} onFilterClick={this.handleFilterArticles} />
+          <SortBy title="Sort" sortByChecked={this.state.sortOrder} onSortClick={this.handleSortArticles}/>
         </div>
 
         <ArticleList articles={this.state.articles}/>
@@ -123,7 +140,28 @@ function getPubDate(datestr) {
   ];
 
   let newdate = new Date(datestr);
-  return `${newdate.getDay()} ${monthNames[newdate.getMonth()]}`
+  return `${newdate.getDate()} ${monthNames[newdate.getMonth()]}`
+}
+
+export function sortArticles(sortOrder, articles) {
+  let sortedArticles;
+
+  switch (sortOrder) {
+    case 'ascending':
+      sortedArticles = [...articles].sort((a, b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      });
+      break;
+    case 'descending':
+      sortedArticles = [...articles].sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+      break;
+    default:
+      sortedArticles = articles;
+  }
+
+  return sortedArticles;
 }
 
 ReactDOM.render(<RssReader />, document.getElementById("root"));
