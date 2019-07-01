@@ -73,15 +73,19 @@ body {
 .article-origin {
   font-style: italic;
 }
-.filter-by-number {
-  
+.header {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.filter-by-number:not(:last-child) {
+  margin-right: 20px;
 }
 .segmented-control {
   border: 1px solid #9b9b9b;
   border-radius: 6px; 
   display: flex;
-  margin: 20px auto;
-  max-width: 200px;
+  width: 200px;
 }
 .segmented-control-input {
   position: absolute;
@@ -99,4 +103,7 @@ body {
 }
 .segmented-control-label:not(:last-child) {
   border-right: 1px solid #9b9b9b;
+}
+.filter-heading {
+  text-transform: uppercase;
 }

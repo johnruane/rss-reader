@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css'
+import './index.css';
+import SortBy from './components/SortBy.js';
 
 const sourceWebsites = [
   {title: 'refinery29', url: 'https://www.refinery29.com/rss.xml'},
@@ -26,42 +27,6 @@ class ArticleList extends React.Component {
         )
       })
     );
-  }
-}
-
-class FilterByNumber extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedFilterNumberOption: 'sc-1'
-    }
-
-    this.handleFilterNumberChange = this.handleFilterNumberChange.bind(this); 
-  }
-
-  handleFilterNumberChange(changeEvent) {
-    this.setState({
-      selectedFilterNumberOption: changeEvent.target.value
-    });
-  }
-
-  render() {
-    return (
-      <div className="filter-by-number">
-        <p># of articles: </p>
-        <div className="segmented-control" id="sc1">
-          <input className="segmented-control-input" type="radio" name="sc-1" id="sc-1-1" 
-            checked={this.state.selectedFilterNumberOption === 'sc-1'} onChange={this.handleFilterNumberChange} value="sc-1" />
-          <label className="segmented-control-label" htmlFor="sc-1-1">All</label>
-          <input className="segmented-control-input" type="radio" name="sc-1" id="sc-1-2"
-            checked={this.state.selectedFilterNumberOption === 'sc-2'} onChange={this.handleFilterNumberChange} value="sc-2"/>
-          <label className="segmented-control-label" htmlFor="sc-1-2">5</label>
-          <input className="segmented-control-input" type="radio" name="sc-1" id="sc-1-3"
-            checked={this.state.selectedFilterNumberOption === 'sc-3'} onChange={this.handleFilterNumberChange} value="sc-3"/>
-          <label className="segmented-control-label" htmlFor="sc-1-3">10</label>
-        </div>
-      </div>
-    )
   }
 }
 
@@ -124,7 +89,11 @@ export default class RssReader extends React.Component {
   render() {
     return (
       <div className="article-container">
-        <FilterByNumber />
+        <div className="header">
+          <SortBy id="sb1" title="Articles" sortOptions={['All', '5', '10']}/>
+          <SortBy id="sb2" title="Sort" sortOptions={['↑', '↓']}/>
+        </div>
+
         <ArticleList articles={this.state.articles}/>
       </div>
     )
