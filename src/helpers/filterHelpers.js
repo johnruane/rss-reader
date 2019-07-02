@@ -4,12 +4,12 @@ export function sortArticles(sortOrder, articles) {
   switch (sortOrder) {
     case 'ascending':
       sortedArticles = [...articles].sort((a, b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
+        return a.pubdate - b.pubdate;
       });
       break;
     case 'descending':
       sortedArticles = [...articles].sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+        return b.pubdate - a.pubdate;
       });
       break;
     default:

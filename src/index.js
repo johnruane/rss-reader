@@ -6,7 +6,7 @@ import Pagination from './components/Pagination.js';
 import SortBy from './components/SortBy.js';
 import ShowMe from './components/ShowMe.js';
 import { sortArticles } from './helpers/filterHelpers.js';
-import { getPubDate, getWebsiteString } from './helpers/stringHelpers.js';
+import { getPubDate, getWebsiteString, getDisplayDate } from './helpers/stringHelpers.js';
 
 const sourceWebsites = [
   {title: 'refinery29', url: 'https://www.refinery29.com/rss.xml'},
@@ -44,9 +44,12 @@ export default class RssReader extends React.Component {
 
   // onclick function to sort the articles on show by date
   handleSortArticles(e) {
-    let sortedArticles = sortArticles(e.target.value, this.state.articlesToRender);
+    let sortedArticles = sortArticles(e.target.value, this.state.allArticles);
+    const startPos = (this.state.currentPage * this.state.showMe) - this.state.showMe;
+    const endPos = this.state.currentPage * this.state.showMe;
     this.setState({
-      articlesToRender: sortedArticles,
+      allArticles: sortedArticles,
+      articlesToRender: sortedArticles.slice(startPos, endPos),
       sortOrder: e.target.value,
     });
   }
@@ -123,7 +126,8 @@ export default class RssReader extends React.Component {
           heading: item.querySelector('title').textContent,
           src: imageUrl,
           link: item.querySelector('link').textContent,
-          date: getPubDate(item.querySelector('pubDate').textContent),
+          pubdate: getPubDate(item.querySelector('pubDate').textContent),
+          displaydate: getDisplayDate(item.querySelector('pubDate').textContent),
       })
     })
 

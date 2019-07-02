@@ -1,9 +1,13 @@
 function getPubDate(datestr) {
+  const newdate = new Date(datestr);
+  return newdate.getTime();
+}
+
+function getDisplayDate(datestr) {
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-
-  let newdate = new Date(datestr);
+  const newdate = new Date(datestr);
   return `${newdate.getDate()} ${monthNames[newdate.getMonth()]}`
 }
 
@@ -14,4 +18,4 @@ function getWebsiteString(str) {
   return noDubs;
 }
 
-export { getPubDate, getWebsiteString };
+export { getPubDate, getWebsiteString, getDisplayDate };

@@ -13,7 +13,7 @@ class ArticleList extends React.Component {
                   <img className="article-image" src={element.src} alt=""/>
                   <h3 className="article-heading">{element.heading}</h3>                
                 </a>
-                <p className="article-origin">{element.website} - {element.date}</p>
+                <p className="article-origin">{element.website} - {element.displaydate}</p>
               </div>
             </article>
           )
