@@ -1,57 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import ArticleList from './components/ArticleList.js';
 import SortBy from './components/SortBy.js';
-import FilterBy from './components/FilterBy.js';
+import ShowMe from './components/ShowMe.js';
+import { sortArticles } from './helpers/filterHelpers.js';
+import { getPubDate, getWebsiteString } from './helpers/stringHelpers.js';
 
 const sourceWebsites = [
   {title: 'refinery29', url: 'https://www.refinery29.com/rss.xml'},
   {title: 'i-d', url: 'https://i-d.vice.com/en_uk/rss'},
 ];
 
-class ArticleList extends React.Component {
-  render() {
-    const articles = this.props.articles;
-
-    return (
-      articles.map((element, index) => {
-        return (
-          <article className="article" key={index}>
-            <div className="article-inner">
-              <a className="article-link" href={element.link} target="_blank" rel="noopener noreferrer">
-                <img className="article-image" src={element.src} alt=""/>
-                <h3 className="article-heading">{element.heading}</h3>                
-              </a>
-              <p className="article-origin">{element.website} - {element.date}</p>
-            </div>
-          </article>
-        )
-      })
-    );
-  }
-}
-
 export default class RssReader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       articles: [],
+      articlesToShow: [],
       sortOrder: 'descending',
-      filterBy: 'all'
+      showMe: 'all'
     }
 
     this.handleSortArticles = this.handleSortArticles.bind(this);
+    this.handleShowMe = this.handleShowMe.bind(this);
   }
 
-  handleFilterArticles(e) {
-
-  }
-
-  handleSortArticles(e) {
-    const articles = this.state.articles;
+  // onclick function to only show a set number of articles
+  handleShowMe(e) {
+    let showMeValue = (e.target.value === "") ? this.state.articles.length : parseInt(e.target.value, 10);
 
     this.setState({
-      articles: sortArticles(e.target.value, articles),
+      articlesToShow: sortArticles(this.state.sortOrder, this.state.articles.slice(0, showMeValue)),
+    });
+  }
+
+  // onclick function to sort the articles on show by date
+  handleSortArticles(e) {
+    this.setState({
+      articlesToShow: sortArticles(e.target.value, this.state.articlesToShow),
+      sortOrder: e.target.value,
     });
   }
 
@@ -98,8 +86,12 @@ export default class RssReader extends React.Component {
       })
     })
 
+    // sort articles by default sort order before setting state
+    const sortedArticles = sortArticles(this.state.sortOrder, articles);
+
     this.setState({
-      articles: sortArticles('descending', articles),
+      articles: sortedArticles,
+      articlesToShow: [...sortedArticles],
     });
   }
 
@@ -107,11 +99,10 @@ export default class RssReader extends React.Component {
     return (
       <div className="article-container">
         <div className="header">
-          <FilterBy title="Articles" filterByChecked={this.state.filterBy} onFilterClick={this.handleFilterArticles} />
+          <ShowMe title="Show" showMeChecked={this.state.showMe} onShowClick={this.handleShowMe} />
           <SortBy title="Sort" sortByChecked={this.state.sortOrder} onSortClick={this.handleSortArticles}/>
         </div>
-
-        <ArticleList articles={this.state.articles}/>
+        <ArticleList articles={this.state.articlesToShow} show={this.state.showMe}/>
       </div>
     )
   }
@@ -125,43 +116,6 @@ async function getArticleItems(url) {
   const document = domparser.parseFromString(results, 'text/xml');
   const [...items] = document.querySelectorAll('channel item');
   return items;
-}
-
-function getWebsiteString(str) {
-  let strNoProocol = str.split('//')[1];
-  let strNoPath = strNoProocol.split('.com')[0];
-  let noDubs = strNoPath.replace('www.', '');
-  return noDubs;
-}
-
-function getPubDate(datestr) {
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  let newdate = new Date(datestr);
-  return `${newdate.getDate()} ${monthNames[newdate.getMonth()]}`
-}
-
-export function sortArticles(sortOrder, articles) {
-  let sortedArticles;
-
-  switch (sortOrder) {
-    case 'ascending':
-      sortedArticles = [...articles].sort((a, b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      });
-      break;
-    case 'descending':
-      sortedArticles = [...articles].sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      });
-      break;
-    default:
-      sortedArticles = articles;
-  }
-
-  return sortedArticles;
 }
 
 ReactDOM.render(<RssReader />, document.getElementById("root"));

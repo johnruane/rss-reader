@@ -1,20 +1,20 @@
 import React from 'react';
 
-export default class FilterBy extends React.Component {
+export default class ShowMe extends React.Component {
   render() {
-    const { onFilterClick, filterByChecked } = this.props;
+    const { onShowClick, showMeChecked } = this.props;
     return (
       <div className="filter-by">
         <p className="filter-heading">{this.props.title}: </p>
         <div className="segmented-control">      
           <input className="segmented-control-input" type="radio" name="sc-2" id="sc-2-1" 
-            defaultChecked={filterByChecked === "all"} onChange={e => onFilterClick(e)} value="all" />
+            defaultChecked={showMeChecked === "all"} onChange={e => onShowClick(e)} value="" />
           <label className="segmented-control-label" htmlFor="sc-2-1">ALL</label>
           <input className="segmented-control-input" type="radio" name="sc-2" id="sc-2-2" 
-            defaultChecked={filterByChecked === "five"} onChange={e => onFilterClick(e)} value="five" />
+            defaultChecked={showMeChecked === "five"} onChange={e => onShowClick(e)} value="5" />
           <label className="segmented-control-label" htmlFor="sc-2-2">5</label>
           <input className="segmented-control-input" type="radio" name="sc-2" id="sc-2-3" 
-            defaultChecked={filterByChecked === "ten"} onChange={e => onFilterClick(e)} value="ten" />
+            defaultChecked={showMeChecked === "ten"} onChange={e => onShowClick(e)} value="10" />
           <label className="segmented-control-label" htmlFor="sc-2-3">10</label>
         </div>
       </div>
