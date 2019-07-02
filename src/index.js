@@ -44,8 +44,9 @@ export default class RssReader extends React.Component {
 
   // onclick function to sort the articles on show by date
   handleSortArticles(e) {
+    let sortedArticles = sortArticles(e.target.value, this.state.articlesToRender);
     this.setState({
-      articlesToRender: sortArticles(e.target.value, this.state.articlesToRender),
+      articlesToRender: sortedArticles,
       sortOrder: e.target.value,
     });
   }
