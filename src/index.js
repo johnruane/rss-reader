@@ -13,8 +13,6 @@ const sourceWebsites = [
   {title: 'i-d', url: 'https://i-d.vice.com/en_uk/rss'},
 ];
 
-const defaultArticles = 8;
-
 export default class RssReader extends React.Component {
   constructor(props) {
     super(props);
@@ -22,7 +20,7 @@ export default class RssReader extends React.Component {
       allArticles: [],
       articlesToRender: [],
       sortOrder: 'descending',
-      showMe: defaultArticles,
+      showMe: 5,
       currentPage: 1,
       numberOfPages: 1,
     }
@@ -147,7 +145,7 @@ export default class RssReader extends React.Component {
     return (
       <div className="article-container">
         <div className="header">
-          <ShowMe title="Show" showMeChecked={this.state.showMe} onShowClick={this.handleShowMe} maxArticles={defaultArticles} />
+          <ShowMe title="Show" showMeChecked={this.state.showMe} onShowClick={this.handleShowMe} />
           <SortBy title="Sort" sortByChecked={this.state.sortOrder} onSortClick={this.handleSortArticles}/>
         </div>
         <ArticleList articles={this.state.articlesToRender} />
