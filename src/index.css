@@ -120,9 +120,10 @@ body {
   border: 1px solid #9b9b9b;
   background-color: #FFFFFF;
   border-radius: 6px; 
-  font-size: 16px;
+  font-size: 14px;
   padding: 6px;
-  width: 150px;
+  width: 120px;
+  margin: 0 12px;
   text-transform: uppercase;
 }
 .pagination-button:not(.active) {
