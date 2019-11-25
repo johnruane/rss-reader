@@ -110,7 +110,9 @@ export default class RssReader extends React.Component {
         case 'refinery29' : 
           const domParser = new DOMParser();
           const imageParser = domParser.parseFromString(item.querySelector('item description').textContent, 'text/xml');
-          imageUrl = imageParser.querySelector('figure img').getAttribute('src');
+          if (imageParser.getElementsByTagName('figure').length === 1) {
+            imageUrl = imageParser.querySelector('figure img').getAttribute('src');
+          }
           break;
         case 'i-d.vice' : 
           imageUrl = item.querySelector('enclosure').getAttribute('url');
