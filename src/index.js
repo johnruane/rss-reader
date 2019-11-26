@@ -9,8 +9,10 @@ import { sortArticles } from './helpers/filterHelpers.js';
 import { getPubDate, getWebsiteString, getDisplayDate } from './helpers/stringHelpers.js';
 
 const sourceWebsites = [
-  {title: 'refinery29', url: 'https://www.refinery29.com/rss.xml'},
+  {title: 'refinery29', url: 'https://www.wmagazine.com/feed/rss'},
   {title: 'i-d', url: 'https://i-d.vice.com/en_uk/rss'},
+  {title: 'elle', url: 'https://www.elle.com/rss/all.xml/'},
+  {title: 'gq', url: 'https://www.gq.com/feed/style/rss'}
 ];
 
 export default class RssReader extends React.Component {
@@ -107,15 +109,24 @@ export default class RssReader extends React.Component {
             
       // site specific code to extract article image url
       switch (websiteStr) {
-        case 'refinery29' : 
+        case 'refinery29': 
           const domParser = new DOMParser();
           const imageParser = domParser.parseFromString(item.querySelector('item description').textContent, 'text/xml');
           if (imageParser.getElementsByTagName('figure').length === 1) {
             imageUrl = imageParser.querySelector('figure img').getAttribute('src');
           }
           break;
-        case 'i-d.vice' : 
+        case 'i-d.vice': 
           imageUrl = item.querySelector('enclosure').getAttribute('url');
+          break;
+        case 'wmagazine':
+          imageUrl = item.querySelector('thumbnail').getAttribute('url');
+          break;
+        case 'elle':
+          imageUrl = item.querySelector('content').getAttribute('url');
+          break;
+        case 'gq':
+          imageUrl = item.querySelector('thumbnail').getAttribute('url');
           break;
         default :
           imageUrl = '--'
